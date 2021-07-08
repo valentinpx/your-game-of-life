@@ -1,5 +1,6 @@
 import sys
 import base64
+from img import createImage
 
 MAN = """USAGE
 \tpython3 src/main.py [key path]
@@ -7,6 +8,7 @@ MAN = """USAGE
 DESCRIPTION
 \t[key path]\tPath to the ssh key"""
 WIDTH = 112
+DEST_PATH = "ygol.png"
 
 # Definitions
 def get_map(key_path):
@@ -31,5 +33,4 @@ if (len(sys.argv) != 2 or sys.argv[1] == "-h"):
 cells = get_map(sys.argv[1])
 
 # Print
-for cell in cells:
-    print(cell)
+createImage(DEST_PATH, cells)

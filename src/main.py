@@ -1,6 +1,7 @@
 import sys
 import base64
-from img import createImage
+from img import create_image, create_gif
+from gol import get_next_gen
 
 MAN = """USAGE
 \tpython3 src/main.py [key path]
@@ -8,20 +9,23 @@ MAN = """USAGE
 DESCRIPTION
 \t[key path]\tPath to the ssh key"""
 WIDTH = 112
-DEST_PATH = "ygol.png"
+HEIGHT = 52
+DEST_PATH = "ygol.gif"
+FRAMES = 1000
 
 # Definitions
 def get_map(key_path):
     dest = []
     key_str = open(key_path, "r").read().replace("\n", "")[35:-33].encode("ascii")
     decoded = base64.decodebytes(key_str)
-    line = ""
+    line = []
 
     for byte in decoded:
-        if (len(line) >= 112):
+        if (len(line) >= WIDTH):
             dest.append(line)
-            line = ""
-        line += "{:08b}".format(byte)
+            line = []
+        for bit in "{:08b}".format(byte):
+            line.append(0 if bit == '0' else 1)
     return dest
 
 # Args parse
@@ -30,7 +34,13 @@ if (len(sys.argv) != 2 or sys.argv[1] == "-h"):
     sys.exit(1)
 
 # Execution
-cells = get_map(sys.argv[1])
+cells_arr = [get_map(sys.argv[1])]
+imgs = []
 
-# Print
-createImage(DEST_PATH, cells)
+for i in range(FRAMES - 1):
+    cells_arr.append(get_next_gen(cells_arr[-1]))
+for cells in cells_arr:
+    imgs.append(create_image((WIDTH * 10, HEIGHT * 10), cells))
+
+# Result
+create_gif(DEST_PATH, (WIDTH * 10, HEIGHT * 10), imgs)

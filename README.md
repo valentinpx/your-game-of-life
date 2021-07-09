@@ -1,6 +1,8 @@
 # your-game-of-life
 Project created for the {Digital Art.} exhibition at Epitech (Lille).
 
+![ygol.gif preview](https://raw.githubusercontent.com/valentinpx/your-game-of-life/main/ygol.gif)
+
 ## Description
 With an SSH key (which was generated at the event entrance from the visitor's face), the program generates a cell grid.
 This cell grid is then processed by a cellular automaton: the [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).

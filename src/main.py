@@ -1,5 +1,6 @@
 import sys
 import base64
+from math import sqrt
 from img import create_image, create_gif
 from gol import get_next_gen
 
@@ -8,8 +9,6 @@ MAN = """USAGE
 
 DESCRIPTION
 \t[key path]\tPath to the ssh key"""
-WIDTH = 112
-HEIGHT = 52
 DEST_PATH = "ygol.gif"
 FRAMES = 1000
 
@@ -33,7 +32,16 @@ def binary_to_map(binary, width):
             dest.append(line)
             line = []
         line.append(bit)
+    if (line != []):
+        while (len(line) < width):
+            line.append(0)
+        dest.append(line)
     return dest
+
+def compute_height(bin_len, width):
+    if (bin_len / width == bin_len // width):
+        return (bin_len // width)
+    return int(bin_len / width + 1)
 
 # Args parse
 if (len(sys.argv) != 2 or sys.argv[1] == "-h"):
@@ -41,13 +49,17 @@ if (len(sys.argv) != 2 or sys.argv[1] == "-h"):
     sys.exit(1)
 
 # Execution
-cells_arr = [binary_to_map(key_to_binary(sys.argv[1]), WIDTH)]
-imgs = []
+binary = key_to_binary(sys.argv[1])
+width = int(sqrt(len(binary)))
+height = compute_height(len(binary), width)
+cells_arr = [binary_to_map(binary, width)]
 
 for i in range(FRAMES - 1):
     cells_arr.append(get_next_gen(cells_arr[-1]))
-for cells in cells_arr:
-    imgs.append(create_image((WIDTH * 10, HEIGHT * 10), cells))
 
 # Result
-create_gif(DEST_PATH, (WIDTH * 10, HEIGHT * 10), imgs)
+imgs = []
+
+for cells in cells_arr:
+    imgs.append(create_image((width * 10, height * 10), cells))
+create_gif(DEST_PATH, (width * 10, height * 10), imgs)

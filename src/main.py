@@ -14,18 +14,25 @@ DEST_PATH = "ygol.gif"
 FRAMES = 1000
 
 # Definitions
-def get_map(key_path):
+def key_to_binary(key_path):
     dest = []
     key_str = open(key_path, "r").read().replace("\n", "")[35:-33].encode("ascii")
     decoded = base64.decodebytes(key_str)
-    line = []
 
     for byte in decoded:
-        if (len(line) >= WIDTH):
+        for bit in "{:08b}".format(byte):
+            dest.append(0 if bit == '0' else 1)
+    return dest
+
+def binary_to_map(binary, width):
+    dest = []
+    line = []
+
+    for bit in binary:
+        if (len(line) >= width):
             dest.append(line)
             line = []
-        for bit in "{:08b}".format(byte):
-            line.append(0 if bit == '0' else 1)
+        line.append(bit)
     return dest
 
 # Args parse
@@ -34,7 +41,7 @@ if (len(sys.argv) != 2 or sys.argv[1] == "-h"):
     sys.exit(1)
 
 # Execution
-cells_arr = [get_map(sys.argv[1])]
+cells_arr = [binary_to_map(key_to_binary(sys.argv[1]), WIDTH)]
 imgs = []
 
 for i in range(FRAMES - 1):

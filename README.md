@@ -8,7 +8,7 @@ With an SSH key (which was generated at the event entrance from the visitor's fa
 This cell grid is then processed by a cellular automaton: the [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
 A GIF based on the successive created states of the grid is finally rendered.
 
-### Usage
+## Usage
 > python3 src/main.py [key path]
 - `[key path]` Path to the ssh key
 
